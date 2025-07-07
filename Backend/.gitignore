@@ -3,4 +3,9 @@ node_modules/
 npm-debug.log
 dist/
 .env
-/prisma/dev.db
+
+# Database files
+src/prisma/dev.db
+*.db
+*.sqlite
+*.sqlite3
