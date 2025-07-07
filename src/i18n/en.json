@@ -1,0 +1,9 @@
+{
+  "app": {
+    "title": "Live Crypto Prices",
+    "lastUpdated": "Last updated: {{timestamp}}",
+    "lightMode": "Light Mode",
+    "darkMode": "Dark Mode",
+    "docs": "Click on the Vite and React logos to learn more"
+  }
+}

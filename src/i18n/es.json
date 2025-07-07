@@ -1,0 +1,9 @@
+{
+  "app": {
+    "title": "Precios Cripto en Vivo",
+    "lastUpdated": "Última actualización: {{timestamp}}",
+    "lightMode": "Modo Claro",
+    "darkMode": "Modo Oscuro",
+    "docs": "Haga clic en los logotipos de Vite y React para obtener más información"
+  }
+}
