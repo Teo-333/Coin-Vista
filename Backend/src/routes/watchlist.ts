@@ -2,9 +2,10 @@ import { Router } from 'express';
 import { getWatchlist, toggleWatchlist } from '../controllers/watchlistController';
 import { requireAuth } from '../middleware/auth';
 
-const router = Router();
-router.use(requireAuth);
-router.get('/', getWatchlist);
-router.post('/', toggleWatchlist);
+const watchlistRouter = Router();
 
-export default router;
+watchlistRouter.use(requireAuth);
+watchlistRouter.get('/', getWatchlist);
+watchlistRouter.post('/', toggleWatchlist);
+
+export default watchlistRouter;

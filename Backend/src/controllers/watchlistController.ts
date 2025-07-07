@@ -1,24 +1,25 @@
-import { Response } from 'express';
+import type { Response } from 'express';
 import { PrismaClient } from '@prisma/client';
-import { AuthRequest } from '../middleware/auth';
+import type { AuthRequest } from '../middleware/auth';
 
 const prisma = new PrismaClient();
 
-export async function getWatchlist(req: AuthRequest, res: Response) {
+export async function getWatchlist(req: AuthRequest, res: Response): Promise<void> {
   const items = await prisma.watchlist.findMany({ where: { userId: req.userId! } });
-  res.json(items.map(i => i.coinId));
+  const coinIds = items.map(i => i.coinId);
+  res.json(coinIds);
 }
 
-export async function toggleWatchlist(req: AuthRequest, res: Response) {
+export async function toggleWatchlist(req: AuthRequest, res: Response): Promise<void> {
   const { coinId } = req.body;
   const existing = await prisma.watchlist.findUnique({
     where: { userId_coinId: { userId: req.userId!, coinId } },
   });
   if (existing) {
     await prisma.watchlist.delete({ where: { id: existing.id } });
-    return res.json({ action: 'removed' });
+    res.json({ action: 'removed' });
   } else {
     await prisma.watchlist.create({ data: { userId: req.userId!, coinId } });
-    return res.json({ action: 'added' });
+    res.json({ action: 'added' });
   }
 }
