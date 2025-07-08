@@ -30,5 +30,8 @@
     "marketCap": "Market Cap",
     "volume": "Volume",
     "noData": "No data available"
+  },
+  "alerts": {
+    "signInRequired": "Please sign in to add coins to your watchlist"
   }
 }

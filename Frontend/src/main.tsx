@@ -4,8 +4,7 @@ import { createBrowserRouter, RouterProvider,} from 'react-router-dom'
 import { ThemeProvider } from './theme/ThemeProvider.tsx'
 import { Box } from '@mui/material'
 
-import './i18n';   
-import './index.css'
+import './i18n';
 
 import Dashboard from './components/Dashboard/Dashboard.tsx'
 import Header from './components/Header/Header.tsx'
@@ -21,9 +20,23 @@ const router = createBrowserRouter([
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <ThemeProvider>
-      <Box className="min-h-screen flex flex-col">
+      <Box 
+        sx={{ 
+          minHeight: '100vh', 
+          display: 'flex', 
+          flexDirection: 'column',
+          bgcolor: 'background.default'
+        }}
+      >
         <Header/>
-        <Box component="main" className="flex-1">
+        <Box 
+          component="main" 
+          sx={{ 
+            flexGrow: 1,
+            display: 'flex',
+            flexDirection: 'column'
+          }}
+        >
           <RouterProvider router={router}/>
         </Box>
         <Footer/>

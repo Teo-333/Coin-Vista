@@ -2,11 +2,11 @@ import React, { useState, useEffect } from 'react';
 import {
   Container,
   Typography,
-  Grid,
   Box,
   CircularProgress,
   Alert,
   Button,
+  Paper,
 } from '@mui/material';
 import RefreshIcon from '@mui/icons-material/Refresh';
 import { useTranslation } from 'react-i18next';
@@ -22,7 +22,6 @@ const Dashboard: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const [lastUpdated, setLastUpdated] = useState<Date | null>(null);
 
-  // Mock authentication state - replace with actual auth context later
   const [isAuthenticated] = useState(false);
 
   const featuredCoins = [
@@ -95,7 +94,6 @@ const Dashboard: React.FC = () => {
       fetchWatchlist();
     }
 
-    // Set up auto-refresh every 60 seconds
     const interval = setInterval(() => {
       fetchCoins();
     }, 60000);
@@ -112,99 +110,167 @@ const Dashboard: React.FC = () => {
   };
 
   return (
-    <Container maxWidth="xl" className="px-4 py-6 md:py-8">
-      {/* Header Section */}
-      <Box className="mb-6 md:mb-8">
-        <Box className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-4">
-          <Typography
-            variant="h4"
-            component="h1"
-            className="font-bold text-2xl md:text-3xl lg:text-4xl"
+    <Box sx={{ bgcolor: 'background.default', minHeight: '100vh', py: 4 }}>
+      <Container maxWidth="xl">
+        <Paper 
+          elevation={0} 
+          sx={{ 
+            bgcolor: 'background.paper', 
+            p: 4, 
+            mb: 4, 
+            borderRadius: 2,
+            border: 1,
+            borderColor: 'divider'
+          }}
+        >
+          <Box 
+            sx={{ 
+              display: 'flex',
+              flexDirection: { xs: 'column', sm: 'row' },
+              alignItems: { xs: 'flex-start', sm: 'flex-start' },
+              justifyContent: 'space-between',
+              gap: 3,
+              mb: 3
+            }}
           >
-            {t('dashboard.title')}
-          </Typography>
-          
-          <Button
-            variant="outlined"
-            startIcon={<RefreshIcon />}
-            onClick={handleRefresh}
-            disabled={loading}
-            size="small"
-            className="self-start sm:self-auto"
-          >
-            {t('dashboard.retry')}
-          </Button>
-        </Box>
+            <Typography
+              variant="h4"
+              component="h1"
+              sx={{ 
+                color: 'text.primary',
+                fontWeight: 700,
+                fontSize: { xs: '1.75rem', md: '2rem' }
+              }}
+            >
+              {t('dashboard.title')}
+            </Typography>
+            
+            <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: { xs: 'flex-start', sm: 'flex-end' } }}>
+              <Button
+                variant="outlined"
+                startIcon={<RefreshIcon />}
+                onClick={handleRefresh}
+                disabled={loading}
+                size="medium"
+                sx={{
+                  borderRadius: 2,
+                  textTransform: 'none',
+                  fontWeight: 500,
+                  mb: 1
+                }}
+              >
+                {t('dashboard.retry')}
+              </Button>
+              
+              {lastUpdated && (
+                <Typography
+                  variant="body2"
+                  color="text.secondary"
+                  sx={{ 
+                    fontSize: '0.75rem',
+                    textAlign: { xs: 'left', sm: 'right' }
+                  }}
+                >
+                  {t('dashboard.lastUpdated', { 
+                    time: formatLastUpdated(lastUpdated) 
+                  })}
+                </Typography>
+              )}
+            </Box>
+          </Box>
+        </Paper>
 
-        {lastUpdated && (
-          <Typography
-            variant="body2"
-            color="text.secondary"
-            className="mb-4"
+        {error && (
+          <Alert
+            severity="error"
+            action={
+              <Button color="inherit" onClick={handleRefresh}>
+                {t('dashboard.retry')}
+              </Button>
+            }
+            sx={{ mb: 4, borderRadius: 2 }}
           >
-            {t('dashboard.lastUpdated', { 
-              time: formatLastUpdated(lastUpdated) 
-            })}
-          </Typography>
+            {error}
+          </Alert>
         )}
-      </Box>
 
-      {/* Error State */}
-      {error && (
-        <Alert
-          severity="error"
-          action={
-            <Button color="inherit" onClick={handleRefresh}>
+        {loading && coins.length === 0 && (
+          <Paper 
+            elevation={0} 
+            sx={{ 
+              bgcolor: 'background.paper', 
+              border: 1, 
+              borderColor: 'divider',
+              borderRadius: 2,
+              p: 8,
+              textAlign: 'center'
+            }}
+          >
+            <CircularProgress size={48} sx={{ mb: 3 }} />
+            <Typography variant="h6" color="text.secondary">
+              {t('dashboard.loading')}
+            </Typography>
+          </Paper>
+        )}
+
+        {!loading && coins.length > 0 && (
+          <Box 
+            sx={{ 
+              display: 'grid',
+              gridTemplateColumns: {
+                xs: '1fr',
+                sm: 'repeat(2, 1fr)',
+                md: 'repeat(3, 1fr)',
+                lg: 'repeat(4, 1fr)'
+              },
+              gap: 3
+            }}
+          >
+            {coins.map((coin) => (
+              <CoinCard
+                key={coin.id}
+                coin={coin}
+                isInWatchlist={watchlist.includes(coin.id)}
+                onToggleWatchlist={handleToggleWatchlist}
+                isAuthenticated={isAuthenticated}
+              />
+            ))}
+          </Box>
+        )}
+
+        {!loading && coins.length === 0 && !error && (
+          <Paper 
+            elevation={0} 
+            sx={{ 
+              bgcolor: 'background.paper', 
+              border: 1, 
+              borderColor: 'divider',
+              borderRadius: 2,
+              p: 8,
+              textAlign: 'center'
+            }}
+          >
+            <Typography variant="h6" color="text.secondary" sx={{ mb: 4 }}>
+              {t('dashboard.noData')}
+            </Typography>
+            <Button
+              variant="contained"
+              onClick={handleRefresh}
+              startIcon={<RefreshIcon />}
+              sx={{
+                borderRadius: 2,
+                textTransform: 'none',
+                fontWeight: 500,
+                px: 4,
+                py: 1.5
+              }}
+            >
               {t('dashboard.retry')}
             </Button>
-          }
-          className="mb-6"
-        >
-          {error}
-        </Alert>
-      )}
-
-      {/* Loading State */}
-      {loading && coins.length === 0 && (
-        <Box className="flex flex-col items-center justify-center py-12">
-          <CircularProgress size={48} className="mb-4" />
-          <Typography variant="body1" color="text.secondary">
-            {t('dashboard.loading')}
-          </Typography>
-        </Box>
-      )}
-
-      {/* Coins Grid */}
-      {!loading && coins.length > 0 && (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6">
-          {coins.map((coin) => (
-            <CoinCard
-              key={coin.id}
-              coin={coin}
-              isInWatchlist={watchlist.includes(coin.id)}
-              onToggleWatchlist={handleToggleWatchlist}
-              isAuthenticated={isAuthenticated}
-            />
-          ))}
-        </div>
-      )}
-
-      {/* No Data State */}
-      {!loading && coins.length === 0 && !error && (
-        <Box className="flex flex-col items-center justify-center py-12">
-          <Typography variant="h6" color="text.secondary" className="mb-4">
-            {t('dashboard.noData')}
-          </Typography>
-          <Button
-            variant="contained"
-            onClick={handleRefresh}
-            startIcon={<RefreshIcon />}
-          >
-            {t('dashboard.retry')}
-          </Button>
-        </Box>
-      )}
-    </Container>
+          </Paper>
+        )}
+      </Container>
+    </Box>
   );
 };
 

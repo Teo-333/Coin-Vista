@@ -30,5 +30,8 @@
     "marketCap": "Cap. de Mercado",
     "volume": "Volumen",
     "noData": "No hay datos disponibles"
+  },
+  "alerts": {
+    "signInRequired": "Por favor inicie sesión para agregar monedas a sus favoritos"
   }
 }

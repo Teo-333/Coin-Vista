@@ -16,90 +16,142 @@ interface User {
   email: string;
   id: string;
 }
+  
+const BitcoinLogo = () => (
+  <svg
+  width="28"
+  height="28"
+  viewBox="0 0 256 256"
+  fill="currentColor"
+  style={{ marginRight: 8 }}
+  xmlns="http://www.w3.org/2000/svg"
+>
+  <circle
+    cx="128"
+    cy="128"
+    r="128"
+    fill="#f7931a"
+  />
+
+  <text
+    x="50%"
+    y="50%"
+    textAnchor="middle"
+    dominantBaseline="middle"
+    fontFamily="Arial, Helvetica, sans-serif"
+    fontSize="160"
+    fontWeight="bold"
+    fill="#ffffff"
+  >
+    ₿
+  </text>
+</svg>
+);
 
 export default function Header() {
   const { t } = useTranslation();
   
-  // Mock authentication state - replace with actual auth context later
   const isAuthenticated = false;
   const user: User | null = null;
 
   const handleSignIn = () => {
-    // TODO: Implement sign in functionality
     console.log('Sign in clicked');
   };
 
   const handleSignOut = () => {
-    // TODO: Implement sign out functionality
     console.log('Sign out clicked');
   };
 
   return (
-    <header>
-      <AppBar position="sticky" elevation={1}>
-        <Toolbar className="px-4 md:px-6 lg:px-8 min-h-[64px]">
-          {/* Logo */}
+    <AppBar 
+      position="sticky" 
+      elevation={0}
+      sx={{ 
+        bgcolor: 'background.paper',
+        borderBottom: 1,
+        borderColor: 'divider'
+      }}
+    >
+      <Toolbar sx={{ px: { xs: 2, md: 3, lg: 4 }, minHeight: 64 }}>
+        <Box 
+          sx={{ 
+            display: 'flex', 
+            alignItems: 'center',
+            flexGrow: 1 
+          }}
+        >
+          <BitcoinLogo />
           <Typography 
             variant="h6" 
             component="div" 
-            sx={{ flexGrow: 1 }}
-            className="font-bold text-lg md:text-xl"
+            sx={{ 
+              color: 'text.primary',
+              fontWeight: 700,
+              fontSize: { xs: '1.125rem', md: '1.25rem' }
+            }}
           >
             {t('header.appName')}
           </Typography>
+        </Box>
 
-          {/* Desktop Navigation */}
-          <Box className="hidden md:flex items-center space-x-2">
-            <ThemeToggleSwitch />
-            <LanguageDropdown />
-            
-            {isAuthenticated ? (
-              <Box className="flex items-center space-x-2 ml-4">
-                <IconButton size="small">
-                  <Avatar sx={{ width: 32, height: 32 }}>
-                    U
-                  </Avatar>
-                </IconButton>
-                <Button 
-                  color="inherit" 
-                  onClick={handleSignOut}
-                  className="normal-case"
-                  size="small"
-                >
-                  {t('header.signOut')}
-                </Button>
-              </Box>
-            ) : (
-              <Button
-                color="inherit"
-                startIcon={<LoginIcon />}
-                onClick={handleSignIn}
-                className="ml-4 normal-case border border-current"
-                variant="outlined"
-                size="small"
-              >
-                {t('header.signIn')}
-              </Button>
-            )}
-          </Box>
-
-          {/* Mobile Navigation */}
-          <Box className="flex md:hidden items-center space-x-1">
-            <ThemeToggleSwitch />
-            <LanguageDropdown />
-            {!isAuthenticated && (
-              <IconButton 
-                color="inherit" 
-                onClick={handleSignIn}
-                aria-label={t('header.signIn')}
-                size="small"
-              >
-                <LoginIcon fontSize="small" />
+        <Box 
+          sx={{ 
+            display: 'flex', 
+            alignItems: 'center', 
+            gap: 1 
+          }}
+        >
+          <ThemeToggleSwitch />
+          <LanguageDropdown />
+          
+          {isAuthenticated ? (
+            <Box 
+              sx={{ 
+                display: 'flex', 
+                alignItems: 'center', 
+                gap: 1, 
+                ml: 2 
+              }}
+            >
+              <IconButton size="small">
+                <Avatar sx={{ width: 32, height: 32 }}>
+                  U
+                </Avatar>
               </IconButton>
-            )}
-          </Box>
-        </Toolbar>
-      </AppBar>
-    </header>
+              <Button 
+                sx={{ 
+                  color: 'text.primary',
+                  display: { xs: 'none', sm: 'inline-flex' }
+                }}
+                onClick={handleSignOut}
+                size="small"
+              >
+                {t('header.signOut')}
+              </Button>
+            </Box>
+          ) : (
+            <Button
+              sx={{ 
+                color: 'text.primary',
+                borderColor: 'text.primary',
+                ml: 2,
+                '&:hover': {
+                  borderColor: 'primary.main',
+                  bgcolor: 'action.hover'
+                }
+              }}
+              startIcon={<LoginIcon />}
+              onClick={handleSignIn}
+              variant="outlined"
+              size="small"
+            >
+              <Box sx={{ display: { xs: 'none', sm: 'inline' } }}>
+                {t('header.signIn')}
+              </Box>
+            </Button>
+          )}
+        </Box>
+      </Toolbar>
+    </AppBar>
   );
 };
