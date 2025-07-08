@@ -5,5 +5,30 @@
     "lightMode": "Light Mode",
     "darkMode": "Dark Mode",
     "docs": "Click on the Vite and React logos to learn more"
+  },
+  "header": {
+    "appName": "CoinVista",
+    "signIn": "Sign In",
+    "signOut": "Sign Out",
+    "dashboard": "Dashboard",
+    "about": "About",
+    "company": "Company",
+    "product": "Product",
+    "legal": "Legal",
+    "privacyPolicy": "Privacy Policy"
+  },
+  "dashboard": {
+    "title": "Live Crypto Prices",
+    "lastUpdated": "Last updated: {{time}}",
+    "loading": "Loading crypto data...",
+    "error": "Failed to load crypto data",
+    "retry": "Retry",
+    "addToWatchlist": "Add to watchlist",
+    "removeFromWatchlist": "Remove from watchlist",
+    "price": "Price",
+    "change": "24h Change",
+    "marketCap": "Market Cap",
+    "volume": "Volume",
+    "noData": "No data available"
   }
 }

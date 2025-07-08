@@ -5,5 +5,30 @@
     "lightMode": "Modo Claro",
     "darkMode": "Modo Oscuro",
     "docs": "Haga clic en los logotipos de Vite y React para obtener más información"
+  },
+  "header": {
+    "appName": "CoinVista",
+    "signIn": "Iniciar Sesión",
+    "signOut": "Cerrar Sesión",
+    "dashboard": "Panel",
+    "about": "Acerca de",
+    "company": "Empresa",
+    "product": "Producto",
+    "legal": "Legal",
+    "privacyPolicy": "Política de Privacidad"
+  },
+  "dashboard": {
+    "title": "Precios Cripto en Vivo",
+    "lastUpdated": "Última actualización: {{time}}",
+    "loading": "Cargando datos cripto...",
+    "error": "Error al cargar datos cripto",
+    "retry": "Reintentar",
+    "addToWatchlist": "Agregar a favoritos",
+    "removeFromWatchlist": "Quitar de favoritos",
+    "price": "Precio",
+    "change": "Cambio 24h",
+    "marketCap": "Cap. de Mercado",
+    "volume": "Volumen",
+    "noData": "No hay datos disponibles"
   }
 }
