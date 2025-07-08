@@ -112,14 +112,14 @@ const Dashboard: React.FC = () => {
   };
 
   return (
-    <Container maxWidth="xl" className="py-8">
+    <Container maxWidth="xl" className="px-4 py-6 md:py-8">
       {/* Header Section */}
-      <Box className="mb-8">
-        <Box className="flex items-center justify-between mb-4">
+      <Box className="mb-6 md:mb-8">
+        <Box className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-4">
           <Typography
-            variant="h3"
+            variant="h4"
             component="h1"
-            className="font-bold text-3xl md:text-4xl"
+            className="font-bold text-2xl md:text-3xl lg:text-4xl"
           >
             {t('dashboard.title')}
           </Typography>
@@ -129,7 +129,8 @@ const Dashboard: React.FC = () => {
             startIcon={<RefreshIcon />}
             onClick={handleRefresh}
             disabled={loading}
-            className="hidden sm:flex"
+            size="small"
+            className="self-start sm:self-auto"
           >
             {t('dashboard.retry')}
           </Button>
@@ -139,7 +140,7 @@ const Dashboard: React.FC = () => {
           <Typography
             variant="body2"
             color="text.secondary"
-            className="mb-6"
+            className="mb-4"
           >
             {t('dashboard.lastUpdated', { 
               time: formatLastUpdated(lastUpdated) 
@@ -175,7 +176,7 @@ const Dashboard: React.FC = () => {
 
       {/* Coins Grid */}
       {!loading && coins.length > 0 && (
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6">
           {coins.map((coin) => (
             <CoinCard
               key={coin.id}

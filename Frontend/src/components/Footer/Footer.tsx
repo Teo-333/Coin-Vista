@@ -41,24 +41,24 @@ const Footer: React.FC = () => {
         borderColor: 'divider',
         mt: 'auto',
       }}
-      className="mt-16"
+      className="mt-12 md:mt-16"
     >
-      <Container maxWidth="xl" className="py-12">
+      <Container maxWidth="xl" className="px-4 py-8 md:py-12">
         {/* Footer Content */}
-        <Box className="grid grid-cols-1 md:grid-cols-4 gap-8">
+        <Box className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8">
           {/* Brand Section */}
-          <Box className="md:col-span-1">
+          <Box className="sm:col-span-2 lg:col-span-1">
             <Typography
               variant="h6"
               component="div"
-              className="font-bold text-xl mb-4"
+              className="font-bold text-lg md:text-xl mb-3 md:mb-4"
             >
               {t('header.appName')}
             </Typography>
             <Typography
               variant="body2"
               color="text.secondary"
-              className="mb-4"
+              className="mb-4 max-w-xs"
             >
               Your trusted cryptocurrency tracking platform
             </Typography>
@@ -66,7 +66,7 @@ const Footer: React.FC = () => {
 
           {/* Links Sections */}
           {footerSections.map((section) => (
-            <Box key={section.title} className="space-y-3">
+            <Box key={section.title} className="space-y-2 md:space-y-3">
               <Typography
                 variant="subtitle1"
                 className="font-semibold text-sm uppercase tracking-wider"
@@ -74,7 +74,7 @@ const Footer: React.FC = () => {
               >
                 {section.title}
               </Typography>
-              <Box className="space-y-2">
+              <Box className="space-y-1 md:space-y-2">
                 {section.links.map((link) => (
                   <Link
                     key={link.label}
@@ -91,10 +91,10 @@ const Footer: React.FC = () => {
           ))}
         </Box>
 
-        <Divider className="my-8" />
+        <Divider className="my-6 md:my-8" />
 
         {/* Copyright */}
-        <Box className="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
+        <Box className="flex flex-col sm:flex-row justify-between items-center space-y-3 sm:space-y-0 text-center sm:text-left">
           <Typography variant="body2" color="text.secondary">
             © 2024 CoinVista. All rights reserved.
           </Typography>

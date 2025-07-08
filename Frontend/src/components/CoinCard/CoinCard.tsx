@@ -55,96 +55,84 @@ const CoinCard: React.FC<CoinCardProps> = ({
 
   return (
     <Card
-      className="h-full transition-all duration-200 hover:shadow-lg"
+      className="h-full transition-all duration-200 hover:shadow-lg cursor-pointer"
       sx={{
         position: 'relative',
+        borderRadius: 2,
+        boxShadow: '0 1px 3px rgba(0,0,0,0.1)',
         '&:hover': {
           transform: 'translateY(-2px)',
+          boxShadow: '0 4px 12px rgba(0,0,0,0.15)',
         },
       }}
     >
-      <CardContent className="p-6">
+      <CardContent className="p-4 md:p-6">
         {/* Header with icon, name and watchlist button */}
-        <Box className="flex items-center justify-between mb-4">
-          <Box className="flex items-center space-x-3">
+        <Box className="flex items-start justify-between mb-3">
+          <Box className="flex items-center space-x-3 min-w-0 flex-1">
             <Avatar
               src={coin.image}
               alt={coin.name}
-              sx={{ width: 40, height: 40 }}
+              sx={{ width: { xs: 36, md: 40 }, height: { xs: 36, md: 40 } }}
+              className="flex-shrink-0"
             />
-            <Box>
+            <Box className="min-w-0 flex-1">
               <Typography
                 variant="h6"
                 component="h3"
-                className="font-semibold text-base leading-tight"
+                className="font-semibold text-sm md:text-base leading-tight truncate"
               >
                 {coin.name}
               </Typography>
               <Typography
                 variant="body2"
                 color="text.secondary"
-                className="uppercase text-sm"
+                className="uppercase text-xs md:text-sm font-medium"
               >
                 {coin.symbol}
               </Typography>
             </Box>
           </Box>
 
-          {isAuthenticated && (
-            <IconButton
-              onClick={handleWatchlistToggle}
-              size="small"
-              aria-label={
-                isInWatchlist
-                  ? t('dashboard.removeFromWatchlist')
-                  : t('dashboard.addToWatchlist')
-              }
-            >
-              {isInWatchlist ? (
-                <FavoriteIcon color="error" />
-              ) : (
-                <FavoriteBorderIcon />
-              )}
-            </IconButton>
-          )}
+          <IconButton
+            onClick={handleWatchlistToggle}
+            size="small"
+            className="flex-shrink-0 ml-2"
+            aria-label={
+              isInWatchlist
+                ? t('dashboard.removeFromWatchlist')
+                : t('dashboard.addToWatchlist')
+            }
+          >
+            {isInWatchlist ? (
+              <FavoriteIcon color="error" fontSize="small" />
+            ) : (
+              <FavoriteBorderIcon fontSize="small" sx={{ color: 'text.secondary' }} />
+            )}
+          </IconButton>
         </Box>
 
         {/* Price */}
         <Typography
           variant="h5"
           component="div"
-          className="font-bold mb-2"
+          className="font-bold mb-2 text-lg md:text-xl"
         >
           {formatPrice(coin.current_price)}
         </Typography>
 
         {/* 24h Change */}
-        <Chip
-          label={formatPercentage(coin.price_change_percentage_24h)}
-          color={getPercentageColor(coin.price_change_percentage_24h)}
-          size="small"
-          className="font-medium"
-        />
-
-        {/* Additional Info */}
-        <Box className="mt-4 space-y-2">
-          <Box className="flex justify-between items-center">
-            <Typography variant="body2" color="text.secondary">
-              {t('dashboard.marketCap')}
-            </Typography>
-            <Typography variant="body2" className="font-medium">
-              ${coin.market_cap?.toLocaleString() || 'N/A'}
-            </Typography>
-          </Box>
-          
-          <Box className="flex justify-between items-center">
-            <Typography variant="body2" color="text.secondary">
-              {t('dashboard.volume')}
-            </Typography>
-            <Typography variant="body2" className="font-medium">
-              ${coin.total_volume?.toLocaleString() || 'N/A'}
-            </Typography>
-          </Box>
+        <Box className="flex items-center">
+          <Chip
+            label={formatPercentage(coin.price_change_percentage_24h)}
+            color={getPercentageColor(coin.price_change_percentage_24h)}
+            size="small"
+            sx={{
+              fontWeight: 'medium',
+              fontSize: '0.75rem',
+              height: 24,
+            }}
+          />
         </Box>
       </CardContent>
     </Card>

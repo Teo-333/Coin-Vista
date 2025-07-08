@@ -37,13 +37,13 @@ export default function Header() {
   return (
     <header>
       <AppBar position="sticky" elevation={1}>
-        <Toolbar className="px-4 lg:px-8">
+        <Toolbar className="px-4 md:px-6 lg:px-8 min-h-[64px]">
           {/* Logo */}
           <Typography 
             variant="h6" 
             component="div" 
             sx={{ flexGrow: 1 }}
-            className="font-bold text-xl"
+            className="font-bold text-lg md:text-xl"
           >
             {t('header.appName')}
           </Typography>
@@ -64,6 +64,7 @@ export default function Header() {
                   color="inherit" 
                   onClick={handleSignOut}
                   className="normal-case"
+                  size="small"
                 >
                   {t('header.signOut')}
                 </Button>
@@ -75,6 +76,7 @@ export default function Header() {
                 onClick={handleSignIn}
                 className="ml-4 normal-case border border-current"
                 variant="outlined"
+                size="small"
               >
                 {t('header.signIn')}
               </Button>
@@ -90,8 +92,9 @@ export default function Header() {
                 color="inherit" 
                 onClick={handleSignIn}
                 aria-label={t('header.signIn')}
+                size="small"
               >
-                <LoginIcon />
+                <LoginIcon fontSize="small" />
               </IconButton>
             )}
           </Box>
