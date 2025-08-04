@@ -5,6 +5,7 @@ import crypto from 'crypto';
 import { PrismaClient } from '@prisma/client';
 import { signToken } from '../utils/jwt';
 import { sendPasswordResetEmail } from '../utils/emailService';
+import { logger } from '../utils/logger';
 
 const prisma = new PrismaClient();
 
@@ -24,7 +25,7 @@ export async function register(req: Request, res: Response): Promise<void> {
     const token = signToken(user.id, user.email);
     res.json({ token });
   } catch (error) {
-    console.error('Registration error:', error);
+    logger.error(error, 'Registration error');
     res.status(500).json({ error: 'Internal server error' });
   }
 }
@@ -44,7 +45,7 @@ export async function login(req: Request, res: Response): Promise<void> {
     const token = signToken(user.id, user.email);
     res.json({ token });
   } catch (error) {
-    console.error('Login error:', error);
+    logger.error(error, 'Login error');
     res.status(500).json({ error: 'Internal server error' });
   }
 }
@@ -72,13 +73,17 @@ export async function forgotPassword(req: Request, res: Response): Promise<void>
 
     // Generate reset token
     const resetToken = crypto.randomBytes(32).toString('hex');
+    const hashedToken = crypto
+      .createHash('sha256')
+      .update(resetToken)
+      .digest('hex');
     const resetTokenExpiry = new Date(Date.now() + 3600000); // 1 hour from now
 
-    // Save reset token to database
+    // Save hashed reset token to database
     await prisma.user.update({
       where: { id: user.id },
       data: {
-        resetToken,
+        resetToken: hashedToken,
         resetTokenExpiry,
       },
     });
@@ -88,13 +93,13 @@ export async function forgotPassword(req: Request, res: Response): Promise<void>
     const resetUrl = `${frontendUrl}/reset-password?token=${resetToken}&email=${encodeURIComponent(email)}`;
 
     // Send email
-    await sendPasswordResetEmail(email, resetToken, resetUrl);
+    await sendPasswordResetEmail(email, resetUrl);
 
     res.status(200).json({ 
       message: 'If an account with that email exists, we\'ve sent a password reset link.' 
     });
   } catch (error) {
-    console.error('Forgot password error:', error);
+    logger.error(error, 'Forgot password error');
     res.status(500).json({ error: 'Failed to process password reset request' });
   }
 }
@@ -115,10 +120,15 @@ export async function resetPassword(req: Request, res: Response): Promise<void> 
     }
 
     // Find user with valid reset token
+    const hashedToken = crypto
+      .createHash('sha256')
+      .update(token)
+      .digest('hex');
+
     const user = await prisma.user.findFirst({
       where: {
         email,
-        resetToken: token,
+        resetToken: hashedToken,
         resetTokenExpiry: {
           gt: new Date(), // Token hasn't expired
         },
@@ -145,7 +155,7 @@ export async function resetPassword(req: Request, res: Response): Promise<void> 
 
     res.status(200).json({ message: 'Password has been reset successfully' });
   } catch (error) {
-    console.error('Reset password error:', error);
+    logger.error(error, 'Reset password error');
     res.status(500).json({ error: 'Failed to reset password' });
   }
 }
