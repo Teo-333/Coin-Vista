@@ -1,24 +1,30 @@
 import express from 'express';
 import cors from 'cors';
+import pinoHttp from 'pino-http';
 import authRouter from './routes/auth';
 import watchlistRouter from './routes/watchlist';
 import coinsRouter from './routes/coins';
 import swaggerUi from 'swagger-ui-express';
 import { swaggerSpec } from './swagger';
 import type { Request, Response, NextFunction, ErrorRequestHandler } from 'express';
+import { logger } from './utils/logger';
 
 export const app = express();
 
+app.use(pinoHttp({ logger }));
 app.use(cors());
 app.use(express.json());
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 app.use('/auth', authRouter);
 app.use('/watchlist', watchlistRouter);
 app.use('/api/coins', coinsRouter);
+app.get('/health', (req: Request, res: Response) => {
+  res.json({ status: 'ok' });
+});
 
 // Global error handling middleware
 const errorHandler: ErrorRequestHandler = (err, req, res, next) => {
-  console.error('Global error:', err);
+  logger.error(err, 'Global error');
   
   if (err.type === 'validation') {
     res.status(400).json({

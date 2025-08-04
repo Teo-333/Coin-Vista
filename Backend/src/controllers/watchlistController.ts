@@ -6,7 +6,7 @@ const prisma = new PrismaClient();
 
 export async function getWatchlist(req: AuthRequest, res: Response): Promise<void> {
   const items = await prisma.watchlist.findMany({ where: { userId: req.userId! } });
-  const coinIds = items.map(i => i.coinId);
+  const coinIds = items.map((i: { coinId: string }) => i.coinId);
   res.json(coinIds);
 }
 

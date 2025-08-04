@@ -1,15 +1,22 @@
 import nodemailer from 'nodemailer';
+import { logger } from './logger';
+
+if (!process.env.EMAIL_USER || !process.env.EMAIL_PASSWORD) {
+  throw new Error('EMAIL_USER and EMAIL_PASSWORD must be set');
+}
 
 // Email configuration
 const transporter = nodemailer.createTransport({
-  service: 'gmail', // You can change this to your preferred email service
+  host: process.env.EMAIL_HOST,
+  port: parseInt(process.env.EMAIL_PORT || '587', 10),
+  secure: process.env.EMAIL_SECURE === 'true',
   auth: {
-    user: process.env.EMAIL_USER, // Your email address
-    pass: process.env.EMAIL_PASSWORD, // Your email app password
+    user: process.env.EMAIL_USER,
+    pass: process.env.EMAIL_PASSWORD,
   },
 });
 
-export async function sendPasswordResetEmail(email: string, resetToken: string, resetUrl: string): Promise<void> {
+export async function sendPasswordResetEmail(email: string, resetUrl: string): Promise<void> {
   const mailOptions = {
     from: process.env.EMAIL_USER,
     to: email,
@@ -58,9 +65,9 @@ export async function sendPasswordResetEmail(email: string, resetToken: string, 
 
   try {
     await transporter.sendMail(mailOptions);
-    console.log('Password reset email sent successfully to:', email);
+    logger.info(`Password reset email sent to: ${email}`);
   } catch (error) {
-    console.error('Error sending password reset email:', error);
+    logger.error(error, 'Error sending password reset email');
     throw new Error('Failed to send password reset email');
   }
-} 
+}

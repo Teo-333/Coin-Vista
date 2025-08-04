@@ -11,6 +11,7 @@ import Dashboard from './components/Dashboard/Dashboard.tsx'
 import SignIn from './components/Auth/SignIn.tsx'
 import SignUp from './components/Auth/SignUp.tsx'
 import Profile from './components/Profile/Profile.tsx'
+import CoinDetails from './components/CoinDetails/CoinDetails.tsx'
 
 const router = createBrowserRouter([
   {
@@ -21,17 +22,21 @@ const router = createBrowserRouter([
         index: true,
         element: <Dashboard />
       },
-      {
+      { 
         path: "signin",
         element: <SignIn />
       },
       {
-        path: "signup", 
+        path: "signup",
         element: <SignUp />
       },
       {
         path: "profile",
         element: <Profile />
+      },
+      {
+        path: "coins/:id",
+        element: <CoinDetails />
       },
     ]
   },

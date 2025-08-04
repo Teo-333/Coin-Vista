@@ -61,6 +61,7 @@ export default function Header() {
 
   const handleSignOut = () => {
     logout();
+    navigate('/');
   };
 
   const handleWatchlistClick = () => {

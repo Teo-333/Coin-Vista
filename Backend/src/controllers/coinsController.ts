@@ -1,10 +1,17 @@
 import type { Request, Response, NextFunction } from 'express';
 import axios from 'axios';
+import { getCache, setCache } from '../utils/cache';
 
 const COINGECKO_BASE_URL = 'https://api.coingecko.com/api/v3';
 
 export async function getCoins(req: Request, res: Response, next: NextFunction): Promise<void> {
   try {
+    const cacheKey = req.originalUrl;
+    const cached = getCache<any>(cacheKey);
+    if (cached) {
+      res.json(cached);
+      return;
+    }
     const { ids, vs_currency = 'usd', price_change_percentage } = req.query;
     
     const params: any = {
@@ -24,6 +31,7 @@ export async function getCoins(req: Request, res: Response, next: NextFunction):
     }
     
     const response = await axios.get(`${COINGECKO_BASE_URL}/coins/markets`, { params });
+    setCache(cacheKey, response.data, 60 * 1000);
     res.json(response.data);
   } catch (error: any) {
     if (error.response) {
@@ -39,6 +47,12 @@ export async function getCoins(req: Request, res: Response, next: NextFunction):
 
 export async function getCoinHistory(req: Request, res: Response, next: NextFunction): Promise<void> {
   try {
+    const cacheKey = req.originalUrl;
+    const cached = getCache<any>(cacheKey);
+    if (cached) {
+      res.json(cached);
+      return;
+    }
     const { id } = req.params;
     const { days = '7', interval } = req.query;
     
@@ -52,6 +66,7 @@ export async function getCoinHistory(req: Request, res: Response, next: NextFunc
     }
     
     const response = await axios.get(`${COINGECKO_BASE_URL}/coins/${id}/market_chart`, { params });
+    setCache(cacheKey, response.data, 60 * 1000);
     res.json(response.data);
   } catch (error: any) {
     if (error.response) {
@@ -67,6 +82,12 @@ export async function getCoinHistory(req: Request, res: Response, next: NextFunc
 
 export async function getCoinOHLC(req: Request, res: Response, next: NextFunction): Promise<void> {
   try {
+    const cacheKey = req.originalUrl;
+    const cached = getCache<any>(cacheKey);
+    if (cached) {
+      res.json(cached);
+      return;
+    }
     const { id } = req.params;
     const { vs_currency = 'usd', days = '7' } = req.query;
     
@@ -76,6 +97,7 @@ export async function getCoinOHLC(req: Request, res: Response, next: NextFunctio
     };
     
     const response = await axios.get(`${COINGECKO_BASE_URL}/coins/${id}/ohlc`, { params });
+    setCache(cacheKey, response.data, 60 * 1000);
     res.json(response.data);
   } catch (error: any) {
     if (error.response) {
@@ -91,6 +113,12 @@ export async function getCoinOHLC(req: Request, res: Response, next: NextFunctio
 
 export async function getBatchHistory(req: Request, res: Response, next: NextFunction): Promise<void> {
   try {
+    const cacheKey = req.originalUrl;
+    const cached = getCache<any>(cacheKey);
+    if (cached) {
+      res.json(cached);
+      return;
+    }
     const { ids } = req.query;
     
     if (!ids || typeof ids !== 'string') {
@@ -127,8 +155,9 @@ export async function getBatchHistory(req: Request, res: Response, next: NextFun
     });
     
     const results = await Promise.all(promises);
+    setCache(cacheKey, results, 60 * 1000);
     res.json(results);
   } catch (error) {
     next(error);
   }
-} 
+}

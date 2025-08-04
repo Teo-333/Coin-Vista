@@ -1,5 +1,8 @@
 import { Router } from 'express';
+import { body } from 'express-validator';
 import { register, login, forgotPassword, resetPassword } from '../controllers/authController';
+import { authLimiter } from '../middleware/rateLimiter';
+import { validate } from '../middleware/validate';
 
 const authRouter = Router();
 
@@ -53,7 +56,13 @@ const authRouter = Router();
  *       500:
  *         description: Internal server error
  */
-authRouter.post('/register', register);
+authRouter.post(
+  '/register',
+  body('email').isEmail(),
+  body('password').isLength({ min: 6 }),
+  validate,
+  register
+);
 
 /**
  * @swagger
@@ -95,7 +104,14 @@ authRouter.post('/register', register);
  *       500:
  *         description: Internal server error
  */
-authRouter.post('/login', login);
+authRouter.post(
+  '/login',
+  authLimiter,
+  body('email').isEmail(),
+  body('password').isLength({ min: 6 }),
+  validate,
+  login
+);
 
 /**
  * @swagger
@@ -132,7 +148,13 @@ authRouter.post('/login', login);
  *       500:
  *         description: Failed to process password reset request
  */
-authRouter.post('/forgot-password', forgotPassword);
+authRouter.post(
+  '/forgot-password',
+  authLimiter,
+  body('email').isEmail(),
+  validate,
+  forgotPassword
+);
 
 /**
  * @swagger
@@ -179,6 +201,14 @@ authRouter.post('/forgot-password', forgotPassword);
  *       500:
  *         description: Failed to reset password
  */
-authRouter.post('/reset-password', resetPassword);
+authRouter.post(
+  '/reset-password',
+  authLimiter,
+  body('token').notEmpty(),
+  body('email').isEmail(),
+  body('newPassword').isLength({ min: 6 }),
+  validate,
+  resetPassword
+);
 
 export default authRouter;
