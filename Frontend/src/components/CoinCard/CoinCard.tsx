@@ -14,6 +14,7 @@ import FavoriteIcon from '@mui/icons-material/Favorite';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import { useTranslation } from 'react-i18next';
 import type { CryptoData } from '../../types/crypto';
+import { useNavigate } from 'react-router-dom';
 
 interface CoinCardProps {
   coin: CryptoData;
@@ -30,6 +31,7 @@ const CoinCard: React.FC<CoinCardProps> = ({
 }) => {
   const { t } = useTranslation();
   const [showAuthAlert, setShowAuthAlert] = useState(false);
+  const navigate = useNavigate();
 
   const formatPrice = (price: number): string => {
     if (price >= 1) {
@@ -61,6 +63,10 @@ const CoinCard: React.FC<CoinCardProps> = ({
     }
   };
 
+  const handleCardClick = () => {
+    navigate(`/coins/${coin.id}`);
+  };
+
   const handleCloseAlert = () => {
     setShowAuthAlert(false);
   };
@@ -85,6 +91,7 @@ const CoinCard: React.FC<CoinCardProps> = ({
             borderColor: 'primary.main',
           },
         }}
+        onClick={handleCardClick}
       >
         <CardContent sx={{ p: 3, pb: 3, flexGrow: 1 }}>
           <Box sx={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', mb: 3 }}>
@@ -124,7 +131,7 @@ const CoinCard: React.FC<CoinCardProps> = ({
             </Box>
 
             <IconButton
-              onClick={handleWatchlistToggle}
+              onClick={(e) => { e.stopPropagation(); handleWatchlistToggle(); }}
               size="small"
               sx={{
                 ml: 1,

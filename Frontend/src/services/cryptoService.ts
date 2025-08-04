@@ -1,5 +1,5 @@
 import api from './api';
-import type { CryptoData, CryptoHistoryData, WatchlistItem } from '../types/crypto';
+import type { CryptoData, CryptoHistoryData } from '../types/crypto';
 
 export const cryptoService = {
   // Get crypto market data
@@ -43,7 +43,7 @@ export const cryptoService = {
       days?: string;
       interval?: string;
     }
-  ): Promise<any[]> {
+  ): Promise<unknown[]> {
     const idsParam = coinIds.join(',');
     const response = await api.get('/api/coins/history', {
       params: { ids: idsParam, ...params },
