@@ -10,19 +10,19 @@ import {
 } from '@mui/material';
 import RefreshIcon from '@mui/icons-material/Refresh';
 import { useTranslation } from 'react-i18next';
+import { useAuth } from '../../hooks/useAuth';
 import CoinCard from '../CoinCard/CoinCard';
 import cryptoService from '../../services/cryptoService';
 import type { CryptoData } from '../../types/crypto';
 
 const Dashboard: React.FC = () => {
   const { t } = useTranslation();
+  const { isAuthenticated } = useAuth();
   const [coins, setCoins] = useState<CryptoData[]>([]);
   const [watchlist, setWatchlist] = useState<string[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [lastUpdated, setLastUpdated] = useState<Date | null>(null);
-
-  const [isAuthenticated] = useState(false);
 
   const featuredCoins = [
     'bitcoin',

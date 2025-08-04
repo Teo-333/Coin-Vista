@@ -6,16 +6,17 @@ import {
   Box,
   IconButton,
   Avatar,
+  Alert,
+  Snackbar,
 } from "@mui/material";
 import LoginIcon from '@mui/icons-material/Login';
+import FavoriteIcon from '@mui/icons-material/Favorite';
 import { useTranslation } from 'react-i18next';
+import { useNavigate } from 'react-router-dom';
+import { useState } from 'react';
+import { useAuth } from '../../hooks/useAuth';
 import ThemeToggleSwitch from "../ThemeToggle/ThemeToggle";
 import LanguageDropdown from "../LanguageDropdown/LanguageDropdown";
-
-interface User {
-  email: string;
-  id: string;
-}
   
 const BitcoinLogo = () => (
   <svg
@@ -50,16 +51,28 @@ const BitcoinLogo = () => (
 
 export default function Header() {
   const { t } = useTranslation();
-  
-  const isAuthenticated = false;
-  const user: User | null = null;
+  const navigate = useNavigate();
+  const { user, isAuthenticated, logout } = useAuth();
+  const [showSignInAlert, setShowSignInAlert] = useState(false);
 
   const handleSignIn = () => {
-    console.log('Sign in clicked');
+    navigate('/signin');
   };
 
   const handleSignOut = () => {
-    console.log('Sign out clicked');
+    logout();
+  };
+
+  const handleWatchlistClick = () => {
+    if (isAuthenticated) {
+      navigate('/profile');
+    } else {
+      setShowSignInAlert(true);
+    }
+  };
+
+  const handleCloseAlert = () => {
+    setShowSignInAlert(false);
   };
 
   return (
@@ -77,8 +90,13 @@ export default function Header() {
           sx={{ 
             display: 'flex', 
             alignItems: 'center',
-            flexGrow: 1 
+            flexGrow: 1,
+            cursor: 'pointer',
+            '&:hover': {
+              opacity: 0.8
+            }
           }}
+          onClick={() => navigate('/')}
         >
           <BitcoinLogo />
           <Typography 
@@ -104,18 +122,45 @@ export default function Header() {
           <ThemeToggleSwitch />
           <LanguageDropdown />
           
+          <IconButton
+            onClick={handleWatchlistClick}
+            size="small"
+            sx={{
+              color: 'text.primary',
+              border: 1,
+              borderColor: 'divider',
+              borderRadius: 1,
+              ml: 1,
+              '&:hover': {
+                bgcolor: 'action.hover',
+                borderColor: 'primary.main'
+              }
+            }}
+            aria-label="Watchlist"
+          >
+            <FavoriteIcon fontSize="small" />
+          </IconButton>
+          
           {isAuthenticated ? (
             <Box 
               sx={{ 
                 display: 'flex', 
                 alignItems: 'center', 
                 gap: 1, 
-                ml: 2 
+                ml: 1 
               }}
             >
-              <IconButton size="small">
+              <IconButton 
+                size="small"
+                onClick={() => navigate('/profile')}
+                sx={{
+                  '&:hover': {
+                    bgcolor: 'action.hover'
+                  }
+                }}
+              >
                 <Avatar sx={{ width: 32, height: 32 }}>
-                  U
+                  {user?.email.charAt(0).toUpperCase()}
                 </Avatar>
               </IconButton>
               <Button 
@@ -134,7 +179,7 @@ export default function Header() {
               sx={{ 
                 color: 'text.primary',
                 borderColor: 'text.primary',
-                ml: 2,
+                ml: 1,
                 '&:hover': {
                   borderColor: 'primary.main',
                   bgcolor: 'action.hover'
@@ -151,6 +196,22 @@ export default function Header() {
             </Button>
           )}
         </Box>
+
+        <Snackbar
+          open={showSignInAlert}
+          autoHideDuration={4000}
+          onClose={handleCloseAlert}
+          anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+        >
+          <Alert 
+            onClose={handleCloseAlert} 
+            severity="info" 
+            variant="filled"
+            sx={{ borderRadius: 2 }}
+          >
+            {t('alerts.signInRequired')}
+          </Alert>
+        </Snackbar>
       </Toolbar>
     </AppBar>
   );

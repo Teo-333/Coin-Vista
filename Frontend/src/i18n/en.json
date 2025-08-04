@@ -33,5 +33,32 @@
   },
   "alerts": {
     "signInRequired": "Please sign in to add coins to your watchlist"
+  },
+  "auth": {
+    "signIn": "Sign In",
+    "signUp": "Sign Up",
+    "email": "Email",
+    "password": "Password",
+    "confirmPassword": "Confirm Password",
+    "forgotPassword": "Forgot Password?",
+    "noAccount": "Don't have an account?",
+    "hasAccount": "Already have an account?",
+    "signInButton": "Sign In",
+    "signUpButton": "Create Account",
+    "signInTitle": "Welcome Back",
+    "signUpTitle": "Create Your Account",
+    "signInSubtitle": "Sign in to your account to continue",
+    "signUpSubtitle": "Join CoinVista to track your favorite cryptocurrencies",
+    "emailRequired": "Email is required",
+    "emailInvalid": "Please enter a valid email address",
+    "passwordRequired": "Password is required",
+    "passwordMinLength": "Password must be at least 6 characters",
+    "passwordsMatch": "Passwords must match",
+    "loginError": "Invalid email or password",
+    "registerError": "Registration failed",
+    "genericError": "Something went wrong. Please try again.",
+    "loading": "Loading...",
+    "signingIn": "Signing in...",
+    "creatingAccount": "Creating account..."
   }
 }
