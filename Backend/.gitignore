@@ -6,6 +6,7 @@ dist/
 
 # Database files
 src/prisma/dev.db
+dev.db
 *.db
 *.sqlite
 *.sqlite3

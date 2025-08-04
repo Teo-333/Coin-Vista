@@ -90,8 +90,13 @@ export default function Header() {
           sx={{ 
             display: 'flex', 
             alignItems: 'center',
-            flexGrow: 1 
+            flexGrow: 1,
+            cursor: 'pointer',
+            '&:hover': {
+              opacity: 0.8
+            }
           }}
+          onClick={() => navigate('/')}
         >
           <BitcoinLogo />
           <Typography 
@@ -145,7 +150,15 @@ export default function Header() {
                 ml: 1 
               }}
             >
-              <IconButton size="small">
+              <IconButton 
+                size="small"
+                onClick={() => navigate('/profile')}
+                sx={{
+                  '&:hover': {
+                    bgcolor: 'action.hover'
+                  }
+                }}
+              >
                 <Avatar sx={{ width: 32, height: 32 }}>
                   {user?.email.charAt(0).toUpperCase()}
                 </Avatar>

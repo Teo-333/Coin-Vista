@@ -21,7 +21,7 @@ export async function register(req: Request, res: Response): Promise<void> {
 
     const hash = await bcrypt.hash(password, 10);
     const user = await prisma.user.create({ data: { email, password: hash } });
-    const token = signToken(user.id);
+    const token = signToken(user.id, user.email);
     res.json({ token });
   } catch (error) {
     console.error('Registration error:', error);
@@ -41,7 +41,7 @@ export async function login(req: Request, res: Response): Promise<void> {
       return;
     }
     
-    const token = signToken(user.id);
+    const token = signToken(user.id, user.email);
     res.json({ token });
   } catch (error) {
     console.error('Login error:', error);
